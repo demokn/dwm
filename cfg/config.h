@@ -11,8 +11,9 @@ static unsigned int snap            = 32;       /* snap pixel */
 static int showbar                  = 1;        /* 0 means no bar */
 static int topbar                   = 1;        /* 0 means bottom bar */
 static char font[]                  = "monospace:size=10";
+static char font2[]                 = "JoyPixels:pixelsize=10:antialias=true:autohint=true";
 static char dmenufont[]             = "monospace:size=10";
-static const char *fonts[]          = { font };
+static const char *fonts[]          = { font, font2 };
 static char normbgcolor[]           = "#222222";
 static char normbordercolor[]       = "#444444";
 static char normfgcolor[]           = "#bbbbbb";
@@ -88,6 +89,7 @@ static const char *scratchpadcmd[] = { "st", "-t", scratchpadname, "-g", "120x34
  */
 ResourcePref resources[] = {
     { "font",               STRING,  &font },
+    { "font2",              STRING,  &font2 },
     { "dmenufont",          STRING,  &dmenufont },
     { "normbgcolor",        STRING,  &normbgcolor },
     { "normbordercolor",    STRING,  &normbordercolor },
