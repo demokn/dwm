@@ -146,6 +146,8 @@ static Key keys[] = {
 	{ MODKEY,                       XK_t,      setlayout,      {.v = &layouts[0]} }, /* tile */
 	{ MODKEY,                       XK_f,      setlayout,      {.v = &layouts[13]} }, /* float */
 	{ MODKEY,                       XK_m,      setlayout,      {.v = &layouts[1]} }, /* monocle */
+	{ MODKEY,                       XK_u,      setlayout,      {.v = &layouts[11]} }, /* centeredmaster */
+	{ MODKEY,                       XK_o,      setlayout,      {.v = &layouts[12]} }, /* centeredfloatingmaster */
 	{ MODKEY,                       XK_space,  setlayout,      {0} },
 	{ MODKEY|ShiftMask,             XK_space,  togglefloating, {0} },
 	{ MODKEY|ShiftMask,             XK_f,      togglefullscr,  {0} },
