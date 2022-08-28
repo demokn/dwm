@@ -12,7 +12,7 @@ static int showbar                  = 1;        /* 0 means no bar */
 static int topbar                   = 1;        /* 0 means bottom bar */
 static int viewontag                = 1;        /* 1 means switch view on tag switch */
 static char font[]                  = "monospace:size=10";
-static char font2[]                 = "JoyPixels:pixelsize=10:antialias=true:autohint=true";
+static char font2[]                 = "NotoColorEmoji:pixelsize=10:antialias=true:autohint=true";
 static char dmenufont[]             = "monospace:size=10";
 static const char *fonts[]          = { font, font2 };
 static char normbgcolor[]           = "#222222";
