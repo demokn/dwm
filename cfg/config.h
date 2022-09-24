@@ -85,7 +85,8 @@ static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() 
 static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", normbgcolor, "-nf", normfgcolor, "-sb", selbgcolor, "-sf", selfgcolor, NULL };
 static const char *termcmd[]  = { "st", NULL };
 static const char scratchpadname[] = "scratchpad";
-static const char *scratchpadcmd[] = { "st", "-t", scratchpadname, "-g", "160x42", NULL };
+static char scratchpadgeometry[] = "160x42";
+static const char *scratchpadcmd[] = { "st", "-t", scratchpadname, "-g", scratchpadgeometry, NULL };
 
 /*
  * Xresources preferences to load at startup
@@ -112,6 +113,7 @@ ResourcePref resources[] = {
     { "gappoh",          	INTEGER, &gappoh },
     { "gappov",          	INTEGER, &gappov },
     { "smartgaps",          INTEGER, &smartgaps },
+    { "scratchpadgeometry", STRING,  &scratchpadgeometry },
 };
 
 static Key keys[] = {
