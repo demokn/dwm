@@ -1,8 +1,8 @@
 diff --git a/dwm.c b/dwm.c
-index b0b3466..80f700a 100644
+index f5eb198..22ec818 100644
 --- a/dwm.c
 +++ b/dwm.c
-@@ -1069,6 +1069,8 @@ manage(Window w, XWindowAttributes *wa)
+@@ -1270,6 +1270,8 @@ manage(Window w, XWindowAttributes *wa)
  		(unsigned char *) &(c->win), 1);
  	XMoveResizeWindow(dpy, c->win, c->x + 2 * sw, c->y, c->w, c->h); /* some windows require this */
  	setclientstate(c, NormalState);

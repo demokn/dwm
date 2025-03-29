@@ -1,0 +1,66 @@
+diff --git a/config.def.h b/config.def.h
+index cd41756..9619d92 100644
+--- a/config.def.h
++++ b/config.def.h
+@@ -143,6 +143,8 @@ static const Key keys[] = {
+ 	{ MODKEY,                       XK_t,      setlayout,      {.v = &layouts[0]} },
+ 	{ MODKEY,                       XK_f,      setlayout,      {.v = &layouts[1]} },
+ 	{ MODKEY,                       XK_m,      setlayout,      {.v = &layouts[2]} },
++	{ MODKEY|ControlMask,		XK_comma,  cyclelayout,    {.i = -1 } },
++	{ MODKEY|ControlMask,           XK_period, cyclelayout,    {.i = +1 } },
+ 	{ MODKEY,                       XK_space,  setlayout,      {0} },
+ 	{ MODKEY|ShiftMask,             XK_space,  togglefloating, {0} },
+ 	{ MODKEY,                       XK_0,      view,           {.ui = ~0 } },
+diff --git a/dwm.1 b/dwm.1
+index ddc8321..829047b 100644
+--- a/dwm.1
++++ b/dwm.1
+@@ -92,6 +92,12 @@ Sets monocle layout.
+ .B Mod1\-space
+ Toggles between current and previous layout.
+ .TP
++.B Mod1\-Control\-,
++Cycles backwards in layout list.
++.TP
++.B Mod1\-Control\-.
++Cycles forwards in layout list.
++.TP
+ .B Mod1\-j
+ Focus next window.
+ .TP
+diff --git a/dwm.c b/dwm.c
+index 3c14493..652ab15 100644
+--- a/dwm.c
++++ b/dwm.c
+@@ -194,6 +194,7 @@ static void configure(Client *c);
+ static void configurenotify(XEvent *e);
+ static void configurerequest(XEvent *e);
+ static Monitor *createmon(void);
++static void cyclelayout(const Arg *arg);
+ static void destroynotify(XEvent *e);
+ static void detach(Client *c);
+ static void detachstack(Client *c);
+@@ -744,6 +745,23 @@ createmon(void)
+ 	return m;
+ }
+ 
++void
++cyclelayout(const Arg *arg) {
++	Layout *l;
++	for(l = (Layout *)layouts; l != selmon->lt[selmon->sellt]; l++);
++	if(arg->i > 0) {
++		if(l->symbol && (l + 1)->symbol)
++			setlayout(&((Arg) { .v = (l + 1) }));
++		else
++			setlayout(&((Arg) { .v = layouts }));
++	} else {
++		if(l != layouts && (l - 1)->symbol)
++			setlayout(&((Arg) { .v = (l - 1) }));
++		else
++			setlayout(&((Arg) { .v = &layouts[LENGTH(layouts) - 2] }));
++	}
++}
++
+ void
+ destroynotify(XEvent *e)
+ {

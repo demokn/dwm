@@ -1,18 +1,25 @@
+From f30583c6e2ab5e7de6ef4ebf156076ac0f6e69fc Mon Sep 17 00:00:00 2001
+From: Jack Bird <jack.bird@durham.ac.uk>
+Date: Fri, 27 Aug 2021 00:53:14 +0100
+Subject: [PATCH] xresources updated for 138b405
+
+---
+ config.def.h | 61 ++++++++++++++++++++++++++++++--------------
+ drw.c        |  2 +-
+ drw.h        |  2 +-
+ dwm.c        | 72 ++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 4 files changed, 116 insertions(+), 21 deletions(-)
+
 diff --git a/config.def.h b/config.def.h
-index 7d506ae..4c3305a 100644
+index a2ac963..87ac198 100644
 --- a/config.def.h
 +++ b/config.def.h
-@@ -1,26 +1,28 @@
+@@ -1,21 +1,23 @@
  /* See LICENSE file for copyright and license details. */
  
  /* appearance */
 -static const unsigned int borderpx  = 1;        /* border pixel of windows */
 -static const unsigned int snap      = 32;       /* snap pixel */
- static const unsigned int gappih    = 20;       /* horiz inner gap between windows */
- static const unsigned int gappiv    = 10;       /* vert inner gap between windows */
- static const unsigned int gappoh    = 10;       /* horiz outer gap between windows and screen edge */
- static const unsigned int gappov    = 30;       /* vert outer gap between windows and screen edge */
- static       int smartgaps          = 0;        /* 1 means no outer gap when there is only one window */
 -static const int showbar            = 1;        /* 0 means no bar */
 -static const int topbar             = 1;        /* 0 means bottom bar */
 -static const char *fonts[]          = { "monospace:size=10" };
@@ -26,12 +33,12 @@ index 7d506ae..4c3305a 100644
 -	/*               fg         bg         border   */
 -	[SchemeNorm] = { col_gray3, col_gray1, col_gray2 },
 -	[SchemeSel]  = { col_gray4, col_cyan,  col_cyan  },
-+static unsigned int borderpx        = 1;        /* border pixel of windows */
-+static unsigned int snap            = 32;       /* snap pixel */
-+static int showbar                  = 1;        /* 0 means no bar */
-+static int topbar                   = 1;        /* 0 means bottom bar */
-+static char font[]                  = "monospace:size=10";
-+static char dmenufont[]             = "monospace:size=10";
++static unsigned int borderpx  = 1;        /* border pixel of windows */
++static unsigned int snap      = 32;       /* snap pixel */
++static int showbar            = 1;        /* 0 means no bar */
++static int topbar             = 1;        /* 0 means bottom bar */
++static char font[]            = "monospace:size=10";
++static char dmenufont[]       = "monospace:size=10";
 +static const char *fonts[]          = { font };
 +static char normbgcolor[]           = "#222222";
 +static char normbordercolor[]       = "#444444";
@@ -40,13 +47,13 @@ index 7d506ae..4c3305a 100644
 +static char selbordercolor[]        = "#005577";
 +static char selbgcolor[]            = "#005577";
 +static char *colors[][3] = {
-+    /*               fg           bg           border   */
-+    [SchemeNorm] = { normfgcolor, normbgcolor, normbordercolor },
-+    [SchemeSel]  = { selfgcolor,  selbgcolor,  selbordercolor  },
++       /*               fg           bg           border   */
++       [SchemeNorm] = { normfgcolor, normbgcolor, normbordercolor },
++       [SchemeSel]  = { selfgcolor,  selbgcolor,  selbordercolor  },
  };
  
  /* tagging */
-@@ -37,9 +39,9 @@ static const Rule rules[] = {
+@@ -32,9 +34,9 @@ static const Rule rules[] = {
  };
  
  /* layout(s) */
@@ -56,38 +63,36 @@ index 7d506ae..4c3305a 100644
 +static float mfact     = 0.55; /* factor of master area size [0.05..0.95] */
 +static int nmaster     = 1;    /* number of clients in master area */
 +static int resizehints = 1;    /* 1 means respect size hints in tiled resizals */
+ static const int lockfullscreen = 1; /* 1 will force focus on the fullscreen window */
  
- #define FORCE_VSPLIT 1  /* nrowgrid layout: force two clients to always split vertically */
- #include "vanitygaps.c"
-@@ -76,11 +78,32 @@ static const Layout layouts[] = {
+ static const Layout layouts[] = {
+@@ -57,9 +59,30 @@ static const Layout layouts[] = {
  
  /* commands */
  static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() */
 -static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", col_gray1, "-nf", col_gray3, "-sb", col_cyan, "-sf", col_gray4, NULL };
 +static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", normbgcolor, "-nf", normfgcolor, "-sb", selbordercolor, "-sf", selfgcolor, NULL };
  static const char *termcmd[]  = { "st", NULL };
- static const char scratchpadname[] = "scratchpad";
- static const char *scratchpadcmd[] = { "st", "-t", scratchpadname, "-g", "120x34", NULL };
  
 +/*
 + * Xresources preferences to load at startup
 + */
 +ResourcePref resources[] = {
-+    { "font",               STRING,  &font },
-+    { "dmenufont",          STRING,  &dmenufont },
-+    { "normbgcolor",        STRING,  &normbgcolor },
-+    { "normbordercolor",    STRING,  &normbordercolor },
-+    { "normfgcolor",        STRING,  &normfgcolor },
-+    { "selbgcolor",         STRING,  &selbgcolor },
-+    { "selbordercolor",     STRING,  &selbordercolor },
-+    { "selfgcolor",         STRING,  &selfgcolor },
-+    { "borderpx",          	INTEGER, &borderpx },
-+    { "snap",          		INTEGER, &snap },
-+    { "showbar",          	INTEGER, &showbar },
-+    { "topbar",          	INTEGER, &topbar },
-+    { "nmaster",          	INTEGER, &nmaster },
-+    { "resizehints",       	INTEGER, &resizehints },
-+    { "mfact",      	 	FLOAT,   &mfact },
++		{ "font",               STRING,  &font },
++		{ "dmenufont",          STRING,  &dmenufont },
++		{ "normbgcolor",        STRING,  &normbgcolor },
++		{ "normbordercolor",    STRING,  &normbordercolor },
++		{ "normfgcolor",        STRING,  &normfgcolor },
++		{ "selbgcolor",         STRING,  &selbgcolor },
++		{ "selbordercolor",     STRING,  &selbordercolor },
++		{ "selfgcolor",         STRING,  &selfgcolor },
++		{ "borderpx",          	INTEGER, &borderpx },
++		{ "snap",          		INTEGER, &snap },
++		{ "showbar",          	INTEGER, &showbar },
++		{ "topbar",          	INTEGER, &topbar },
++		{ "nmaster",          	INTEGER, &nmaster },
++		{ "resizehints",       	INTEGER, &resizehints },
++		{ "mfact",      	 	FLOAT,   &mfact },
 +};
 +
  static Key keys[] = {
@@ -120,7 +125,7 @@ index 4bcd5ad..42b04ce 100644
  /* Cursor abstraction */
  Cur *drw_cur_create(Drw *drw, int shape);
 diff --git a/dwm.c b/dwm.c
-index 1001375..2f6d698 100644
+index 5e4d494..2214b19 100644
 --- a/dwm.c
 +++ b/dwm.c
 @@ -36,6 +36,7 @@
@@ -131,7 +136,7 @@ index 1001375..2f6d698 100644
  #ifdef XINERAMA
  #include <X11/extensions/Xinerama.h>
  #endif /* XINERAMA */
-@@ -145,6 +146,19 @@ typedef struct {
+@@ -141,6 +142,19 @@ typedef struct {
  	int monitor;
  } Rule;
  
@@ -151,7 +156,7 @@ index 1001375..2f6d698 100644
  /* function declarations */
  static void applyrules(Client *c);
  static int applysizehints(Client *c, int *x, int *y, int *w, int *h, int interact);
-@@ -239,6 +253,8 @@ static int xerror(Display *dpy, XErrorEvent *ee);
+@@ -234,6 +248,8 @@ static int xerror(Display *dpy, XErrorEvent *ee);
  static int xerrordummy(Display *dpy, XErrorEvent *ee);
  static int xerrorstart(Display *dpy, XErrorEvent *ee);
  static void zoom(const Arg *arg);
@@ -160,7 +165,7 @@ index 1001375..2f6d698 100644
  
  /* variables */
  static const char broken[] = "broken";
-@@ -2148,6 +2164,60 @@ zoom(const Arg *arg)
+@@ -2127,6 +2143,60 @@ zoom(const Arg *arg)
  	pop(c);
  }
  
@@ -221,7 +226,7 @@ index 1001375..2f6d698 100644
  int
  main(int argc, char *argv[])
  {
-@@ -2160,6 +2230,8 @@ main(int argc, char *argv[])
+@@ -2139,6 +2209,8 @@ main(int argc, char *argv[])
  	if (!(dpy = XOpenDisplay(NULL)))
  		die("dwm: cannot open display");
  	checkotherwm();
@@ -230,3 +235,6 @@ index 1001375..2f6d698 100644
  	setup();
  #ifdef __OpenBSD__
  	if (pledge("stdio rpath proc exec", NULL) == -1)
+-- 
+2.33.0
+

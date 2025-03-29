@@ -1,29 +1,43 @@
 diff --git a/config.def.h b/config.def.h
-index a886863..75a489d 100644
+index 9619d92..a851bb6 100644
 --- a/config.def.h
 +++ b/config.def.h
-@@ -114,6 +114,7 @@ static Key keys[] = {
- 	{ MODKEY,                       XK_m,      setlayout,      {.v = &layouts[2]} },
+@@ -147,6 +147,7 @@ static const Key keys[] = {
+ 	{ MODKEY|ControlMask,           XK_period, cyclelayout,    {.i = +1 } },
  	{ MODKEY,                       XK_space,  setlayout,      {0} },
  	{ MODKEY|ShiftMask,             XK_space,  togglefloating, {0} },
 +	{ MODKEY|ShiftMask,             XK_f,      togglefullscr,  {0} },
  	{ MODKEY,                       XK_0,      view,           {.ui = ~0 } },
  	{ MODKEY|ShiftMask,             XK_0,      tag,            {.ui = ~0 } },
  	{ MODKEY,                       XK_comma,  focusmon,       {.i = -1 } },
+diff --git a/dwm.1 b/dwm.1
+index 829047b..31b23ec 100644
+--- a/dwm.1
++++ b/dwm.1
+@@ -122,6 +122,9 @@ Zooms/cycles focused window to/from master area (tiled layouts only).
+ .B Mod1\-Shift\-c
+ Close focused window.
+ .TP
++.B Mod1\-Shift\-f
++Toggle fullscreen for focused window.
++.TP
+ .B Mod1\-Shift\-space
+ Toggle focused window between tiled and floating state.
+ .TP
 diff --git a/dwm.c b/dwm.c
-index 701cc95..e25021b 100644
+index 652ab15..151522a 100644
 --- a/dwm.c
 +++ b/dwm.c
-@@ -215,6 +215,7 @@ static void tag(const Arg *arg);
- static void tagmon(const Arg *arg);
+@@ -254,6 +254,7 @@ static void tagmon(const Arg *arg);
  static void togglebar(const Arg *arg);
  static void togglefloating(const Arg *arg);
+ static void togglescratch(const Arg *arg);
 +static void togglefullscr(const Arg *arg);
  static void toggletag(const Arg *arg);
  static void toggleview(const Arg *arg);
  static void unfocus(Client *c, int setfocus);
-@@ -1701,6 +1702,13 @@ togglefloating(const Arg *arg)
- 	arrange(selmon);
+@@ -1937,6 +1938,13 @@ togglescratch(const Arg *arg)
+ 		spawn(arg);
  }
  
 +void

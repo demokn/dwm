@@ -1,15 +1,17 @@
 diff --git a/config.def.h b/config.def.h
-index 75a489d..7d506ae 100644
+index 41117bc..cd41756 100644
 --- a/config.def.h
 +++ b/config.def.h
-@@ -78,11 +78,14 @@ static const Layout layouts[] = {
- static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() */
- static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", col_gray1, "-nf", col_gray3, "-sb", col_cyan, "-sf", col_gray4, NULL };
+@@ -82,6 +82,8 @@ static const Layout layouts[] = {
+ /* commands */
+ static const char *dmenucmd[] = { "dmenu_run", "-fn", dmenufont, "-nb", normbgcolor, "-nf", normfgcolor, "-sb", selbordercolor, "-sf", selfgcolor, NULL };
  static const char *termcmd[]  = { "st", NULL };
 +static const char scratchpadname[] = "scratchpad";
 +static const char *scratchpadcmd[] = { "st", "-t", scratchpadname, "-g", "120x34", NULL };
  
- static Key keys[] = {
+ /*
+  * Xresources preferences to load at startup
+@@ -108,6 +110,7 @@ static const Key keys[] = {
  	/* modifier                     key        function        argument */
  	{ MODKEY,                       XK_p,      spawn,          {.v = dmenucmd } },
  	{ MODKEY|ShiftMask,             XK_Return, spawn,          {.v = termcmd } },
@@ -18,28 +20,28 @@ index 75a489d..7d506ae 100644
  	{ MODKEY,                       XK_j,      focusstack,     {.i = +1 } },
  	{ MODKEY,                       XK_k,      focusstack,     {.i = -1 } },
 diff --git a/dwm.c b/dwm.c
-index e25021b..1001375 100644
+index e522075..3c14493 100644
 --- a/dwm.c
 +++ b/dwm.c
-@@ -216,6 +216,7 @@ static void tagmon(const Arg *arg);
+@@ -252,6 +252,7 @@ static void tag(const Arg *arg);
+ static void tagmon(const Arg *arg);
  static void togglebar(const Arg *arg);
  static void togglefloating(const Arg *arg);
- static void togglefullscr(const Arg *arg);
 +static void togglescratch(const Arg *arg);
  static void toggletag(const Arg *arg);
  static void toggleview(const Arg *arg);
  static void unfocus(Client *c, int setfocus);
-@@ -276,6 +277,8 @@ static Window root, wmcheckwin;
- /* configuration, allows nested code to access above variables */
- #include "config.h"
+@@ -327,6 +328,8 @@ struct Pertag {
+ 	int showbars[LENGTH(tags) + 1]; /* display bar for the current tag */
+ };
  
 +static unsigned int scratchtag = 1 << LENGTH(tags);
 +
  /* compile-time check if all tags fit into an unsigned int bit array. */
  struct NumTags { char limitexceeded[LENGTH(tags) > 31 ? -1 : 1]; };
  
-@@ -1058,6 +1061,14 @@ manage(Window w, XWindowAttributes *wa)
- 		&& (c->x + (c->w / 2) < c->mon->wx + c->mon->ww)) ? bh : c->mon->my);
+@@ -1216,6 +1219,14 @@ manage(Window w, XWindowAttributes *wa)
+ 	c->y = MAX(c->y, c->mon->wy);
  	c->bw = borderpx;
  
 +	selmon->tagset[selmon->seltags] &= ~scratchtag;
@@ -53,16 +55,16 @@ index e25021b..1001375 100644
  	wc.border_width = c->bw;
  	XConfigureWindow(dpy, w, CWBorderWidth, &wc);
  	XSetWindowBorder(dpy, w, scheme[SchemeNorm][ColBorder].pixel);
-@@ -1650,6 +1661,7 @@ spawn(const Arg *arg)
+@@ -1835,6 +1846,7 @@ sigstatusbar(const Arg *arg)
+ void
+ spawn(const Arg *arg)
  {
- 	if (arg->v == dmenucmd)
- 		dmenumon[0] = '0' + selmon->num;
 +	selmon->tagset[selmon->seltags] &= ~scratchtag;
  	if (fork() == 0) {
  		if (dpy)
  			close(ConnectionNumber(dpy));
-@@ -1709,6 +1721,28 @@ togglefullscr(const Arg *arg)
-     setfullscreen(selmon->sel, !selmon->sel->isfullscreen);
+@@ -1885,6 +1897,28 @@ togglefloating(const Arg *arg)
+ 	arrange(selmon);
  }
  
 +void
