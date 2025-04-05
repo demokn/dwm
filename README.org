@@ -1,0 +1,116 @@
+#+TITLE: My DWM Build
+#+OPTIONS: ^:nil
+
+* 如何使用
+
+#+begin_src shell
+  git clone https://github.com/demokn/dwm.git
+  cd dwm
+  ./scripts/build.sh
+#+end_src
+
+* 目录结构
+
+#+begin_example
+  .
+  ├── cfg
+  │   └── config.h    配置文件
+  ├── patches
+  │   └── *.diff      构建时实际应用的 diff 文件, 有顺序要求
+  ├── patches_ori
+  │   └── *.diff      从官网下载的原始 diff 文件, 无实际用途
+  └── scripts
+  │   └── build.sh    构建脚本
+  └── *               其他文件均于 dwm 官方代码保持一致(commit id: 50ad171)
+#+end_example
+
+使用这种目录结构的目的是为了能更方便的同步 dwm 官方代码。
+
+* 如何同步官方的更新
+
+#+begin_src shell
+  git clone https://github.com/demokn/dwm.git
+  cd dwm
+  git remote add dwm git://git.suckless.org/dwm
+  git pull --rebase dwm master
+#+end_src
+
+* 使用的 patch 介绍
+
+** dwm-cfacts-vanitygaps-6.4_combo.diff [fn::https://dwm.suckless.org/patches/vanitygaps/]
+
+这个补丁同时包含了 vanitygaps, cfacts 和 多种布局方式。
+
+*** vanitygaps
+
+受 i3-gaps 某些功能的启发，此补丁以灵活的方式在客户端窗口之间添加了（内部）间隙，
+并在窗口和屏幕边缘之间添加了（外部）间隙。
+
+之所以命名为 vanitygaps，是因为它不提供任何真正的功能，纯粹是一种视觉上的眼球，
+可能最适合寻找特定外观和感觉的人。也就是说，这在显示器上看起来可能很棒（用于监控目的）。
+
+*** cfacts
+
+此补丁提供了在平铺布局中为各自堆栈中的客户端分配不同权重的功能。
+它实现了一个新函数 setcfact，该函数将修改当前所选客户端的 cfact-value。
+它接受以下值：
+
+- 正小数用来增加窗口的权重，从而增加窗口在当前堆栈中分配的空间。
+- 负小数用来减少窗口的权重，从而减少窗口在当前堆栈中分配的空间。
+- 0 值，用于将窗口权重重置为默认值。
+
+每个客户端的默认 cfact-value 为 1.0。如果为客户端分配了 cfact 值 0.5，
+则将为它分配其他客户端所分配空间的一半。如果为客户端分配了 cfact 值 2.0，
+则为其分配的空间是其他客户端分配空间的两倍。
+
+下图说明了该行为。窗口矩形内的浮点数表示该窗口的 cfact 值。
+
+#+begin_example
+  +---------------------+
+  |          |   0.5    |
+  |   1.0    +----------+
+  +----------+          |
+  |          |   1.0    |
+  |          +----------+
+  |   2.0    |          |
+  |          |   1.0    |
+  +----------+----------+
+#+end_example
+
+** dwm-statuscmd-20241009-8933ebc.diff [fn::https://dwm.suckless.org/patches/statuscmd/]
+
+该补丁提供了一种能力：当点击状态栏时，可以将当前点击的位置和鼠标按钮通知给状态监听器(比如: dwmblocks)。
+也就是当使用鼠标点击状态栏时，dwmblocks 可以收到一个信号(signal)，
+能知道是鼠标的哪个按键(左/中/右键)，点击了哪一块位置，以便能及时做出响应。
+
+** dwm-xrdb-6.4.diff [fn::https://dwm.suckless.org/patches/xrdb/]
+
+允许 dwm 在运行时从 xrdb (.Xresources) 读取颜色配置。在配合 pywal 时有奇效，能做到实时更新主题色。
+
+** dwm-xresources-20210827-138b405.diff [fn::https://dwm.suckless.org/patches/xresources/]
+
+该补丁允许处理来自 Xresources 的设置。它与 xrdb patch 的不同之处在于它可以处理任何类型的设置，而不仅仅是颜色设置。
+
+** dwm-pertag-20200914-61bb8b2.diff [fn::https://dwm.suckless.org/patches/pertag/]
+
+taglayouts patch 的更通用方法。此补丁保留每个标签的 layout、mwfact、barpos 和 nmaster。
+
+** dwm-scratchpad-20240321-061e9fe.diff [fn::https://dwm.suckless.org/patches/scratchpad/]
+
+该补丁允许生成或恢复浮动终端窗口。
+
+** dwm-cyclelayouts-20180524-6.2.diff [fn::https://dwm.suckless.org/patches/cyclelayouts/]
+
+循环显示所有可用的布局。仅在使用了大量布局时才 “有用”。
+
+** dwm-actualfullscreen-20211013-cb3f58a.diff [fn::https://dwm.suckless.org/patches/actualfullscreen/]
+
+将窗口切换为真正的全屏模式，而不是切换至 monocle 布局和关闭状态栏。
+
+** dwm-hide_vacant_tags-6.4.diff [fn::https://dwm.suckless.org/patches/hide_vacant_tags/]
+
+隐藏空白(没有打开任何窗口)的 tags 。
+
+** dwm-viewontag-20210312-61bb8b2.diff [fn::https://dwm.suckless.org/patches/viewontag/]
+
+当移动窗口到指定 tags 时，当前焦点也跟随切换到目标 tags 。
